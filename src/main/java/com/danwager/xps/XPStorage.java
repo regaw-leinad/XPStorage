@@ -110,7 +110,7 @@ public class XPStorage extends JavaPlugin implements Listener {
 
         int currentLevel = player.getLevel();
         float xpPercent = player.getExp();
-        int amount = XPUtil.getXpAmountToRemove(currentLevel, xpPercent);
+        int amount = XPUtil.getTotalXpToRemove(currentLevel, xpPercent);
 
         player.sendMessage(ChatColor.GREEN + "Removing " + amount + " xp");
 

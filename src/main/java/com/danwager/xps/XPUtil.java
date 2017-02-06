@@ -54,7 +54,7 @@ public class XPUtil {
      * @param levelProgress A value from 0.0 to 1.0 indicating the progress towards the next level
      * @return The amount of xp required to remove all the specified levels, or down to 0 if there is not enough
      */
-    public static int getXpAmountToRemove(int level, float levelProgress) {
+    public static int getTotalXpToRemove(int level, float levelProgress) {
         int amount = Math.round(getXpRequiredFromLevel(level) * levelProgress);
 
         // Short circuit for already on level 0
