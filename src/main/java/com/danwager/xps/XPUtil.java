@@ -46,25 +46,48 @@ public class XPUtil {
     }
 
     /**
+     * Gets the amount of xp required to remove one level.
+     * If the amount of levels to remove is more than one, it will calculate
+     * the total amount of experience possible until reaching 0.
+     *
+     * @param startLevel The current startLevel to start from
+     * @param levelProgress A value from 0.0 to 1.0 indicating the progress towards the next startLevel
+     * @return The amount of xp required to remove one level, or down to 0 if there is not enough
+     */
+    public static int getXpToRemove(int startLevel, float levelProgress) {
+        return getXpToRemove(startLevel, levelProgress, 1);
+    }
+
+    /**
      * Gets the amount of xp required to remove the specified amount of levels.
      * If the amount of levels to remove is more than the current amount, it will calculate
      * the total amount of experience possible until reaching 0.
      *
      * @param startLevel The current startLevel to start from
      * @param levelProgress A value from 0.0 to 1.0 indicating the progress towards the next startLevel
+     * @param levelsToRemove How many full levels to remove
      * @return The amount of xp required to remove all the specified levels, or down to 0 if there is not enough
      */
-    public static int getXpToRemove(int startLevel, float levelProgress) {
-        int amount = Math.round(getXpRequiredFromLevel(startLevel) * levelProgress);
-
-        // Short circuit for already on startLevel 0
-        if (startLevel == 0) {
-            return amount;
+    public static int getXpToRemove(int startLevel, float levelProgress, int levelsToRemove) {
+        if (levelsToRemove <= 0) {
+            return 0;
         }
 
-        int extra = Math.round(getXpRequiredToLevel(startLevel) * (1 - levelProgress));
+        int amount = 0;
 
-        return amount + extra;
+        for (int i = 0; i < levelsToRemove; i++) {
+            int currentLevel = startLevel - i;
+
+            amount += Math.round(getXpRequiredFromLevel(currentLevel) * levelProgress);
+
+            if (currentLevel == 0) {
+                return amount;
+            }
+
+            amount += Math.round(getXpRequiredToLevel(currentLevel) * (1 - levelProgress));
+        }
+
+        return amount;
     }
 
     /**
