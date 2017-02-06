@@ -69,7 +69,18 @@ public class XPUtil {
      * @return The amount of xp required to remove all the specified levels, or down to 0 if there is not enough
      */
     public static int getXpToRemove(int startLevel, float levelProgress, int levelsToRemove) {
+        if (startLevel < 0) {
+            System.err.println("Invalid startLevel value: " + startLevel);
+            return 0;
+        }
+
+        if (levelProgress < 0) {
+            System.err.println("Invalid levelProgress value: " + levelProgress);
+            return 0;
+        }
+
         if (levelsToRemove <= 0) {
+            System.err.println("Invalid levelsToRemove value: " + levelsToRemove);
             return 0;
         }
 
@@ -78,12 +89,14 @@ public class XPUtil {
         for (int i = 0; i < levelsToRemove; i++) {
             int currentLevel = startLevel - i;
 
+            // The part of the current level
             amount += Math.round(getXpRequiredFromLevel(currentLevel) * levelProgress);
 
             if (currentLevel == 0) {
                 return amount;
             }
 
+            // The part of the previous level to match xp level progress
             amount += Math.round(getXpRequiredToLevel(currentLevel) * (1 - levelProgress));
         }
 
