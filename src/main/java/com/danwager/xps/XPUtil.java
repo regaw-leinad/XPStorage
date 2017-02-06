@@ -68,7 +68,8 @@ public class XPUtil {
     }
 
     /**
-     * Calculates the amount of xp required to level up from a specific level
+     * Calculates the amount of xp required to level up from a specific level.
+     * Source: http://minecraft.gamepedia.com/Experience
      *
      * @param level The level to calculate for
      * @return The amount of xp required to move to the next level
