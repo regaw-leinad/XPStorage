@@ -133,7 +133,7 @@ public class XPUtil {
      * @param level The level to calculate for
      * @return The amount of xp required to move to the next level
      */
-    public static int calculateXpForLevel(int level) {
+    private static int calculateXpForLevel(int level) {
         if (level >= 32) {
             return 9 * level - 158;
         } else if (level >= 17) {
