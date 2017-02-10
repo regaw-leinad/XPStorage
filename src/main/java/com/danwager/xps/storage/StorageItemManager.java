@@ -24,9 +24,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class StorageItemManager implements Listener {
 
-    private static final String TEMPLATE_STORED = ChatColor.AQUA + "Stored:" + ChatColor.GRAY + " %d XP";
-    private static final String TEMPLATE_MAX = ChatColor.AQUA + "Capacity:" + ChatColor.GRAY + " %d XP";
-
     // Other items for future
     // Dye: gray, (green), pink, magenta, purple
     // clay ball, firework star, slime ball
