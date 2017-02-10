@@ -32,6 +32,18 @@ public class XPUtil {
     }
 
     /**
+     * Gets the amount of xp required to go from the specified level to the next level,
+     * taking into account how far the level has already been progressed
+     *
+     * @param level The level to start from
+     * @param levelProgress A value from 0.0 to 1.0 indicating the progress towards the next level
+     * @return The amount of xp required to fully level up to the next level
+     */
+    public static int getXpRequiredFromLevel(int level, float levelProgress) {
+        return Math.round(getXpRequiredFromLevel(level) * levelProgress);
+    }
+
+    /**
      * Gets the amount of xp to go from the previous level to the specified level
      *
      * @param level The level to end up at
@@ -46,6 +58,17 @@ public class XPUtil {
     }
 
     /**
+     * Gets the amount of xp to go from the previous level to the specified level
+     *
+     * @param level The level to end up at
+     * @param levelProgress A value from 0.0 to 1.0 indicating the progress towards the next level
+     * @return The amount of xp required to fully level up to the specified level from the last level
+     */
+    public static int getXpRequiredToLevel(int level, float levelProgress) {
+        return Math.round(getXpRequiredToLevel(level) * levelProgress);
+    }
+
+    /**
      * Gets the amount of xp required to remove one level.
      * If the amount of levels to remove is more than one, it will calculate
      * the total amount of experience possible until reaching 0.
@@ -54,8 +77,8 @@ public class XPUtil {
      * @param levelProgress A value from 0.0 to 1.0 indicating the progress towards the next startLevel
      * @return The amount of xp required to remove one level, or down to 0 if there is not enough
      */
-    public static int getXpToRemove(int startLevel, float levelProgress) {
-        return getXpToRemove(startLevel, levelProgress, 1);
+    public static int getXpToRemoveLevel(int startLevel, float levelProgress) {
+        return getXpToRemoveLevel(startLevel, levelProgress, 1);
     }
 
     /**
@@ -63,12 +86,12 @@ public class XPUtil {
      * If the amount of levels to remove is more than the current amount, it will calculate
      * the total amount of experience possible until reaching 0.
      *
-     * @param startLevel The current startLevel to start from
-     * @param levelProgress A value from 0.0 to 1.0 indicating the progress towards the next startLevel
+     * @param startLevel The current level to start from
+     * @param levelProgress A value from 0.0 to 1.0 indicating the progress towards the next level
      * @param levelsToRemove How many full levels to remove
      * @return The amount of xp required to remove all the specified levels, or down to 0 if there is not enough
      */
-    public static int getXpToRemove(int startLevel, float levelProgress, int levelsToRemove) {
+    public static int getXpToRemoveLevel(int startLevel, float levelProgress, int levelsToRemove) {
         if (startLevel < 0) {
             System.err.println("Invalid startLevel value: " + startLevel);
             return 0;
@@ -110,7 +133,7 @@ public class XPUtil {
      * @param level The level to calculate for
      * @return The amount of xp required to move to the next level
      */
-    private static int calculateXpForLevel(int level) {
+    public static int calculateXpForLevel(int level) {
         if (level >= 32) {
             return 9 * level - 158;
         } else if (level >= 17) {
