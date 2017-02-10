@@ -69,64 +69,6 @@ public class XPUtil {
     }
 
     /**
-     * Gets the amount of xp required to remove one level.
-     * If the amount of levels to remove is more than one, it will calculate
-     * the total amount of experience possible until reaching 0.
-     *
-     * @param startLevel The current startLevel to start from
-     * @param levelProgress A value from 0.0 to 1.0 indicating the progress towards the next startLevel
-     * @return The amount of xp required to remove one level, or down to 0 if there is not enough
-     */
-    public static int getXpToRemoveLevel(int startLevel, float levelProgress) {
-        return getXpToRemoveLevel(startLevel, levelProgress, 1);
-    }
-
-    /**
-     * Gets the amount of xp required to remove the specified amount of levels.
-     * If the amount of levels to remove is more than the current amount, it will calculate
-     * the total amount of experience possible until reaching 0.
-     *
-     * @param startLevel The current level to start from
-     * @param levelProgress A value from 0.0 to 1.0 indicating the progress towards the next level
-     * @param levelsToRemove How many full levels to remove
-     * @return The amount of xp required to remove all the specified levels, or down to 0 if there is not enough
-     */
-    public static int getXpToRemoveLevel(int startLevel, float levelProgress, int levelsToRemove) {
-        if (startLevel < 0) {
-            System.err.println("Invalid startLevel value: " + startLevel);
-            return 0;
-        }
-
-        if (levelProgress < 0) {
-            System.err.println("Invalid levelProgress value: " + levelProgress);
-            return 0;
-        }
-
-        if (levelsToRemove <= 0) {
-            System.err.println("Invalid levelsToRemove value: " + levelsToRemove);
-            return 0;
-        }
-
-        int amount = 0;
-
-        for (int i = 0; i < levelsToRemove; i++) {
-            int currentLevel = startLevel - i;
-
-            // The part of the current level
-            amount += Math.round(getXpRequiredFromLevel(currentLevel) * levelProgress);
-
-            if (currentLevel == 0) {
-                return amount;
-            }
-
-            // The part of the previous level to match xp level progress
-            amount += Math.round(getXpRequiredToLevel(currentLevel) * (1 - levelProgress));
-        }
-
-        return amount;
-    }
-
-    /**
      * Calculates the amount of xp required to level up from a specific level.
      * Source: http://minecraft.gamepedia.com/Experience
      *
