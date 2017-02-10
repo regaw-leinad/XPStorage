@@ -69,6 +69,24 @@ public class XPUtil {
     }
 
     /**
+     * Calculates the level associated with the specified amount of total xp
+     *
+     * @param xp The amount of xp
+     * @return The level associated with the specified amount of xp
+     */
+    public static int calculateLevelFromXp(int xp) {
+        if (xp > 1395) {
+            return (int)((Math.sqrt(72 * xp - 54215) + 325) / 18);
+        }
+
+        if (xp > 315) {
+            return (int)(Math.sqrt(40 * xp - 7839) / 10 + 8.1);
+        }
+
+        return (int)(Math.sqrt(xp + 9) - 3);
+    }
+
+    /**
      * Calculates the amount of xp required to level up from a specific level.
      * Source: http://minecraft.gamepedia.com/Experience
      *
@@ -78,7 +96,9 @@ public class XPUtil {
     private static int calculateXpForLevel(int level) {
         if (level >= 32) {
             return 9 * level - 158;
-        } else if (level >= 17) {
+        }
+
+        if (level >= 17) {
             return 5 * level - 38;
         }
 
