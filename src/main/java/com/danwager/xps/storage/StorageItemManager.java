@@ -173,7 +173,7 @@ public class StorageItemManager implements Listener {
             levelChange = -1;
         }
 
-        itemData.storeXP(xpToStore);
+        itemData.storeXp(xpToStore);
 
         itemData.applyToItem(item);
         player.giveExpLevels(levelChange);
@@ -192,8 +192,8 @@ public class StorageItemManager implements Listener {
         int levelChange = 1;
         float newLevelProgress = 0.0f;
 
-        if (itemData.getStoredXP() < xpToGive) {
-            xpToGive = itemData.getStoredXP();
+        if (itemData.getXpStored() < xpToGive) {
+            xpToGive = itemData.getXpStored();
             levelChange = 0;
             newLevelProgress = ((float)xpToGive) / ((float)xpForLevel);
         }

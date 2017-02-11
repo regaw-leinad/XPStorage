@@ -15,38 +15,38 @@ public class ItemData {
     private static final String TEMPLATE_MAX_XP = ChatColor.AQUA + "Capacity:" + ChatColor.GRAY + " %d XP";
 
     private ItemLevel level;
-    private int currentXP;
+    private int xpStored;
 
     public ItemData() {
         this(ItemLevel.BASIC, 0);
     }
 
-    private ItemData(ItemLevel level, int currentXP) {
+    private ItemData(ItemLevel level, int xpStored) {
         this.level = level;
-        this.currentXP = currentXP;
+        this.xpStored = xpStored;
     }
 
-    public int getStoredXP() {
-        return this.currentXP;
+    public int getXpStored() {
+        return this.xpStored;
     }
 
-    public boolean storeXP(int amount) {
-        int newAmount = getStoredXP() + amount;
+    public boolean storeXp(int amount) {
+        int newAmount = getXpStored() + amount;
 
-        if (newAmount < 0 || newAmount > getMaxXP()) {
+        if (newAmount < 0 || newAmount > getCapacity()) {
             return false;
         }
 
-        this.currentXP = newAmount;
+        this.xpStored = newAmount;
         return true;
     }
 
     public boolean giveXp(int amount) {
-        return storeXP(-amount);
+        return storeXp(-amount);
     }
 
     public int getRemainingSpace() {
-        return getMaxXP() - getStoredXP();
+        return getCapacity() - getXpStored();
     }
 
     public boolean hasSpaceFor(int amount) {
@@ -54,23 +54,23 @@ public class ItemData {
     }
 
     public boolean isEmpty() {
-        return getStoredXP() == 0;
+        return getXpStored() == 0;
     }
 
     public boolean isFull() {
-        return getStoredXP() == getMaxXP();
+        return getXpStored() == getCapacity();
     }
 
-    public int getMaxXP() {
-        return this.level.maxXP;
+    public int getCapacity() {
+        return this.level.capacity;
     }
 
     public void applyToItem(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
 
         meta.setLore(Arrays.asList(
-                String.format(TEMPLATE_STORED_XP, getStoredXP()),
-                String.format(TEMPLATE_MAX_XP, getMaxXP())
+                String.format(TEMPLATE_STORED_XP, getXpStored()),
+                String.format(TEMPLATE_MAX_XP, getCapacity())
         ));
 
         item.setItemMeta(meta);
@@ -98,7 +98,7 @@ public class ItemData {
             levelMapping = new HashMap<>();
 
             for (ItemLevel itemLevel : values()) {
-                levelMapping.put(itemLevel.maxXP, itemLevel);
+                levelMapping.put(itemLevel.capacity, itemLevel);
             }
         }
 
@@ -106,10 +106,10 @@ public class ItemData {
             return levelMapping.get(amount);
         }
 
-        private final int maxXP;
+        private final int capacity;
 
-        ItemLevel(int maxXP) {
-            this.maxXP = maxXP;
+        ItemLevel(int capacity) {
+            this.capacity = capacity;
         }
     }
 }
