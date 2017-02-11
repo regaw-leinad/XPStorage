@@ -212,7 +212,8 @@ public class StorageItemManager implements Listener {
     }
 
     private void playGiveSound(Player player) {
-        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.25f, 1f);
+        // player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.25f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.25f, 1.5f);
     }
 
     private void playStorageFullSound(Player player) {
