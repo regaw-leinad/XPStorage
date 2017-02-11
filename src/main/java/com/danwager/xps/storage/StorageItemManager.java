@@ -5,7 +5,8 @@ import com.danwager.xps.storage.item.BasicStorageItem;
 import com.danwager.xps.storage.item.ItemData;
 import com.danwager.xps.storage.item.StorageItem;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -13,9 +14,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -32,6 +33,16 @@ public class StorageItemManager implements Listener {
     public StorageItemManager(JavaPlugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         this.storageItem = new BasicStorageItem().getStorageItem(new ItemData());
+        registerRecipe();
+    }
+
+    private void registerRecipe() {
+        ShapedRecipe recipe = new ShapedRecipe(this.storageItem);
+        recipe.shape("III", "IBI", "ICI");
+        recipe.setIngredient('I', Material.IRON_BLOCK);
+        recipe.setIngredient('B', Material.ENCHANTED_BOOK);
+        recipe.setIngredient('C', Material.CHEST);
+        Bukkit.addRecipe(recipe);
     }
 
     /**
@@ -84,23 +95,25 @@ public class StorageItemManager implements Listener {
                 cancelEvent(event);
             case RIGHT_CLICK_AIR:
                 // Store XP
+                // If the player has no levels
                 if (currentLevel == 0 && levelProgress == 0) {
+                    playNoLevelsToStoreSound(player);
                     return;
                 }
 
-                if (itemData.getRemainingSpace() <= 0) {
-                    player.sendMessage(ChatColor.RED + "No space to store XP");
+                if (itemData.isFull()) {
+                    playStorageFullSound(player);
                     return;
                 }
 
                 storeXp(player, itemData, item);
                 break;
             case LEFT_CLICK_BLOCK:
-                cancelEvent(event);
+                //cancelEvent(event);
             case LEFT_CLICK_AIR:
                 // Restore XP
-                if (itemData.getStoredXP() == 0) {
-                    player.sendMessage(ChatColor.RED + "No XP left to give");
+                if (itemData.isEmpty()) {
+                    playStorageEmptySound(player);
                     return;
                 }
 
@@ -138,8 +151,9 @@ public class StorageItemManager implements Listener {
                 newLevelProgress = ((float)unstored) / ((float)xpForLevel);
             }
         } else {
+            // No levels to store
             if (currentLevel == 0) {
-                player.sendMessage(ChatColor.RED + "No XP to store");
+                playNoLevelsToStoreSound(player);
                 return;
             }
 
@@ -159,15 +173,13 @@ public class StorageItemManager implements Listener {
             levelChange = -1;
         }
 
-        boolean stored = itemData.storeXP(xpToStore);
-        if (!stored) {
-            player.sendMessage(ChatColor.RED + "Error storing XP");
-            return;
-        }
+        itemData.storeXP(xpToStore);
 
         itemData.applyToItem(item);
         player.giveExpLevels(levelChange);
         player.setExp(newLevelProgress);
+
+        playStoreSound(player);
     }
 
     private void giveXp(Player player, ItemData itemData, ItemStack item) {
@@ -186,22 +198,32 @@ public class StorageItemManager implements Listener {
             newLevelProgress = ((float)xpToGive) / ((float)xpForLevel);
         }
 
-        boolean given = itemData.giveXp(xpToGive);
-        if (!given) {
-            player.sendMessage(ChatColor.RED + "Error giving XP");
-            return;
-        }
+        itemData.giveXp(xpToGive);
 
         itemData.applyToItem(item);
         player.giveExpLevels(levelChange);
         player.setExp(newLevelProgress);
+
+        playGiveSound(player);
     }
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        player.getInventory().clear();
-        player.getInventory().setItem(0, this.storageItem.clone());
-        player.getInventory().setHeldItemSlot(0);
+    private void playStoreSound(Player player) {
+        player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.25f, 1.5f);
+    }
+
+    private void playGiveSound(Player player) {
+        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.25f, 1f);
+    }
+
+    private void playStorageFullSound(Player player) {
+        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.25f, 1.5f);
+    }
+
+    private void playStorageEmptySound(Player player) {
+        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.25f, 1.5f);
+    }
+
+    private void playNoLevelsToStoreSound(Player player) {
+        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.25f, 1.5f);
     }
 }

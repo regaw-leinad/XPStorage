@@ -26,14 +26,6 @@ public class ItemData {
         this.currentXP = currentXP;
     }
 
-    public ItemLevel getLevel() {
-        return this.level;
-    }
-
-    public void setLevel(ItemLevel level) {
-        this.level = level;
-    }
-
     public int getStoredXP() {
         return this.currentXP;
     }
@@ -59,6 +51,14 @@ public class ItemData {
 
     public boolean hasSpaceFor(int amount) {
         return getRemainingSpace() >= amount;
+    }
+
+    public boolean isEmpty() {
+        return getStoredXP() == 0;
+    }
+
+    public boolean isFull() {
+        return getStoredXP() == getMaxXP();
     }
 
     public int getMaxXP() {
@@ -90,7 +90,7 @@ public class ItemData {
     }
 
     private enum ItemLevel {
-        BASIC(55);
+        BASIC(1395);
 
         private static final Map<Integer, ItemLevel> levelMapping;
 

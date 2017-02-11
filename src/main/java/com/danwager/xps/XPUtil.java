@@ -28,7 +28,7 @@ public class XPUtil {
             throw new IllegalArgumentException("level can not be < 0");
         }
 
-        return currentLevelToXpRequired.computeIfAbsent(level, XPUtil::calculateXpForLevel);
+        return currentLevelToXpRequired.computeIfAbsent(level, XPUtil::calculateLevelUpXpFromLevel);
     }
 
     /**
@@ -87,18 +87,18 @@ public class XPUtil {
     }
 
     /**
-     * Calculates the amount of xp required to level up from a specific level.
+     * Calculates the amount of xp required to level up from a specific level to the next level
      * Source: http://minecraft.gamepedia.com/Experience
      *
-     * @param level The level to calculate for
+     * @param level The level to calculate from
      * @return The amount of xp required to move to the next level
      */
-    private static int calculateXpForLevel(int level) {
-        if (level >= 32) {
+    public static int calculateLevelUpXpFromLevel(int level) {
+        if (level > 30) {
             return 9 * level - 158;
         }
 
-        if (level >= 17) {
+        if (level > 15) {
             return 5 * level - 38;
         }
 
